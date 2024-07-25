@@ -42,7 +42,8 @@ async function runUnaryBenchmarkAsync(benchmark, inputs) {
         //     console.log("y1", yar);
         // }
         // await y.device._device.queue.onSubmittedWorkDone();
-        const end = performance.now();
+        const end = performance.now(
+);
         return (end - start) / benchmark.depth;
     }
     for (let i = 0; i < benchmark.warmupIterations; i++) {
@@ -86,7 +87,11 @@ async function runBenchmarksAsync($benchmarksDiv) {
     $benchmarksTable.appendChild($benchmarksTableHead);
     const $benchmarksTableHeadRow = document.createElement('tr');
     $benchmarksTableHead.appendChild($benchmarksTableHeadRow);
-    const hs = ['Benchmark', 'Time (ms)'];
+    
+    // Getting adapter info to set in the table
+    const adapter = await navigator.gpu?.requestAdapter();
+    const adapterInfo = adapter?.info?.description ?? 'Unknown GPU';
+    const hs = ['Benchmark', 'Time (ms) on ' + adapterInfo];
     for (let ok of otherKeys) {
         hs.push(otherResults[ok].device_name);
     }
